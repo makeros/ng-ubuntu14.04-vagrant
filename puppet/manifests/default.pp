@@ -79,7 +79,7 @@ mysql::grant { 'symfony':
 
 class php-setup {
 
-    $php = ["php5-fpm", "php5-cli", "php5-dev", "php5-gd", "php5-curl", "php-apc", "php5-mcrypt", "php5-xdebug", "php5-sqlite", "php5-mysql", "php5-memcache", "php5-intl", "php5-tidy", "php5-imap", "php5-imagick"]
+    $php = ["php5-fpm", "php5-cli", "php5-dev", "php5-gd", "php5-curl", "php-apc", "php5-mcrypt", "php5-xdebug", "php5-sqlite", "php5-mysql", "php5-memcache", "php5-intl", "php5-tidy", "php5-imap", "php5-imagick", "php5-mongo"]
 
     exec { 'add-apt-repository ppa:ondrej/php5':
         command => '/usr/bin/add-apt-repository ppa:ondrej/php5',
