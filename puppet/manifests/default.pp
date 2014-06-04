@@ -65,17 +65,17 @@ class nginx-setup {
     }
 }
 
-class { "mysql":
-    root_password => 'auto',
-}
+# class { "mysql":
+#     root_password => 'auto',
+# }
 
-mysql::grant { 'symfony':
-    mysql_privileges => 'ALL',
-    mysql_password => 'symfony-vagrant',
-    mysql_db => 'symfony',
-    mysql_user => 'symfony',
-    mysql_host => 'localhost',
-}
+# mysql::grant { 'symfony':
+#     mysql_privileges => 'ALL',
+#     mysql_password => 'symfony-vagrant',
+#     mysql_db => 'symfony',
+#     mysql_user => 'symfony',
+#     mysql_host => 'localhost',
+# }
 
 class php-setup {
 
