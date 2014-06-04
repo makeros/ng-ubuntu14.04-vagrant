@@ -8,7 +8,7 @@ class system-update {
     }
 
     exec { 'install python tools':
-        command => 'apt-get install software-properties-common python-software-properties'
+        command => 'apt-get install python-software-properties'
     }
 }
 
@@ -23,17 +23,17 @@ class dev-packages {
         require => Exec['apt-get update'],
     }
 
-    exec { 'install less using npm':
-        command => 'npm install less -g',
-        require => Package["npm"],
-    }
+    # exec { 'install less using npm':
+    #     command => 'npm install less -g',
+    #     require => Package["npm"],
+    # }
 
-    exec { 'install capifony using RubyGems':
+    exec { 'install capifony using rubygems':
         command => 'gem install capifony',
         require => Package["rubygems"],
     }
 
-    exec { 'install sass with compass using RubyGems':
+    exec { 'install sass with compass using rubygems':
         command => 'gem install compass',
         require => Package["rubygems"],
     }
@@ -83,7 +83,7 @@ mysql::grant { 'symfony':
 
 class php-setup {
 
-    $php = ["php5-fpm", "php5-cli", "php5-dev", "php5-gd", "php5-curl", "php-apc", "php5-mcrypt", "php5-xdebug", "php5-sqlite", "php5-mysql", "php5-memcache", "php5-intl", "php5-tidy", "php5-imap", "php5-imagick", "php5-mongo"]
+    $php = ["php5-fpm", "php5-cli", "php5-dev", "php5-gd", "php5-curl", "php-apc", "php5-mcrypt", "php5-xdebug", "php5-sqlite", "php5-mysql", "php5-memcache", "php5-intl", "php5-tidy", "php5-imap", "php5-imagick", "php-pear"]
 
     exec { 'add-apt-repository ppa:ondrej/php5':
         command => '/usr/bin/add-apt-repository ppa:ondrej/php5',
@@ -132,7 +132,7 @@ class php-setup {
         command => '/usr/bin/pecl install --force mongo',
         logoutput => "on_failure",
         require => Package[$php],
-        before => [File['/etc/php5/cli/php.ini'], File['/etc/php5/fpm/php.ini'], File['/etc/php5/fpm/php-fpm.conf'], File['/etc/php5/fpm/pool.d/www.conf']],
+        before => [File['/etc/php5/mods-available/mongo.ini'], File['/etc/php5/cli/php.ini'], File['/etc/php5/fpm/php.ini'], File['/etc/php5/fpm/php-fpm.conf'], File['/etc/php5/fpm/pool.d/www.conf']],
         unless => "/usr/bin/php -m | grep mongo",
     }
 
@@ -173,6 +173,21 @@ class php-setup {
         mode   => 644,
         source => '/vagrant/files/php/fpm/pool.d/www.conf',
         require => Package[$php],
+    }
+
+    file { '/etc/php5/mods-available/mongo.ini':
+        notify => Service["php5-fpm"],
+        owner  => root,
+        group  => root,
+        ensure => file,
+        mode   => 644,
+        source => '/vagrant/files/php/mods-available/mongo.ini',
+        require => Package[$php],
+    }
+
+    exec { 'enable mongo module':
+        command => '/usr/sbin/php5enmod mongo',
+        require => File['/etc/php5/mods-available/mongo.ini'],
     }
 
     service { "php5-fpm":
