@@ -7,6 +7,10 @@ class system-update {
         command => 'apt-get update',
     }
 
+    exec { 'install libfontconfig1':
+        command => 'apt-get install libfontconfig1',
+    }
+
 }
 
 class dev-packages {
