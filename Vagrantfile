@@ -13,8 +13,12 @@ Vagrant::Config.run do |config|
     #config.vm.box_url = "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
 
     config.vm.network :hostonly, "33.33.33.166" # Host-Only networking required for nfs shares
+    # config.vm.network :bridged#, "33.33.33.100" # Host-Only networking required for nfs shares
+    config.vm.forward_port 8000, 3000
+    # config.vm.network :forwarded_port, guest: 8000, host: 8080
+    # config.vm.network :public_network, ip: "192.168.0.200"
 
-    config.vm.share_folder("vagrant", "/vagrant", "./", :nfs => (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/))
+    config.vm.share_folder("vagrant", "/vagrant", "./", :nfs => (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/), :mount_options => ['actimeo=2'])
 
     config.vm.provision :puppet do |puppet|
         puppet.manifests_path = "puppet/manifests"
